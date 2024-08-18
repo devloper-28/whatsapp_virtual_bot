@@ -11,7 +11,7 @@ from telegram.ext import (
 )
 
 # Replace 'YOUR_API_TOKEN' with your actual Telegram API token
-TOKEN = "6934887290:AAHnfnCD3-KNjjtLWOaaN9NAGvbVPt-J7cc"
+TOKEN = "7229498909:AAGCOIzuldIxAnQyTT7czjPPPFQM1Z1-C88"
 QR_CODE_IMAGE_URL = "https://wertrends.s3.eu-north-1.amazonaws.com/Image.jpg"
 ADMIN_CHAT_ID = "676637767"
 QUERY_LINK12 = "https://www.youtube.com/shorts/wC23vXpE2Hc"
@@ -35,7 +35,7 @@ def start(update: Update, context: CallbackContext):
     keyboard = [
         [
             InlineKeyboardButton(
-                "Get Virtual Number", callback_data="get_virtual_number"
+                "Get Whatsapp Number", callback_data="get_virtual_number"
             )
         ],
         [
@@ -66,7 +66,7 @@ def start(update: Update, context: CallbackContext):
 
     update.message.reply_photo(
         photo=QR_CODE_IMAGE_URL,
-        caption=f"Welcome to the bot!\n\n"
+        caption=f"Welcome to the bott!\n\n"
         f"Please pay 650rs to receive a virtual number.\n\n"
         f"Scan the QR code above to make the payment and don't forget to send the transaction ID.\n\n"
         f"If you are facing any difficulties, please raise your query [Click Here]({QUERY_LINK})."
