@@ -66,8 +66,8 @@ def start(update: Update, context: CallbackContext):
 
     update.message.reply_photo(
         photo=QR_CODE_IMAGE_URL,
-        caption=f"Welcome to the bott!\n\n"
-        f"Please pay 650rs to receive a virtual number.\n\n"
+        caption=f"Welcome to the bot!\n\n"
+        f"Please pay 350rs to receive a whatsapp number.\n\n"
         f"Scan the QR code above to make the payment and don't forget to send the transaction ID.\n\n"
         f"If you are facing any difficulties, please raise your query [Click Here]({QUERY_LINK})."
         f"\n\nPlease note that the transaction ID is mandatory for processing."
@@ -154,7 +154,7 @@ def button_callback(update: Update, context: CallbackContext):
 
     if query.data == "get_virtual_number":
         query.message.reply_text(
-            "Please pay 650rs to get a virtual number. If you have already paid, please provide a screenshot so we can confirm and give you the virtual number."
+            "Please pay 350rs to get a whatsapp number. If you have already paid, please provide a screenshot so we can confirm and give you the virtual number."
         )
     elif query.data == "pay_via_crypto":
         crypto_keyboard = [
