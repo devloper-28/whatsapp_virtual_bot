@@ -1,0 +1,96 @@
+import logging
+import os
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+
+# Replace 'YOUR_API_TOKEN' with your actual Telegram API token
+TOKEN = '6779924537:AAHQn3_AWqUqXlMDjUseayGx0Oyu_Qlymq4'
+QR_CODE_IMAGE_URL = 'https://wertrends.s3.eu-north-1.amazonaws.com/photo1702813995.jpeg'
+# Set up logging
+logging.basicConfig(filename='transaction.log',
+format='%(asctime)s - %(levelname)s - %(message)s',
+level=logging.DEBUG)
+
+
+
+# Your chat ID where you want to receive user messages
+ADMIN_CHAT_ID = '676637767'
+QUERY_LINK = 'https://t.me/WeRTrends_admin'
+# A dictionary to store active users and their chat IDs
+active_users = {}
+
+
+def start(update, context):
+  update.message.reply_photo(
+      photo=QR_CODE_IMAGE_URL,
+      caption=f"Welcome to the bot!\n\n"
+      f"Please pay 500 Rs to receive a virtual number.\n\n"
+      f"Scan the QR code above to make the payment and don't forget to send the transaction ID.\n\n"
+      f"If you are facing any difficulties, please raise your query [here]({QUERY_LINK})."
+      f"\n\nPlease note that the transaction ID is mandatory for processing.",
+      parse_mode='Markdown')
+
+
+def forward_message(update, context):
+  # Store the user's message along with their chat ID
+  chat_id = update.message.chat_id
+  user_message = update.message.text
+  user_name = update.message.from_user.first_name
+  user_id = update.message.from_user.id
+
+  # Store the user's chat ID if it's not the admin's chat ID
+  if str(chat_id) != ADMIN_CHAT_ID:
+    active_users[update.message.from_user.username] = chat_id
+
+  # Forward the message to the admin if it's not from the admin's chat ID
+  if str(chat_id) != ADMIN_CHAT_ID:
+    forwarded_message = f"From: {user_name} (ID: {user_id})\n\n{user_message}"
+    context.bot.send_message(chat_id=ADMIN_CHAT_ID, text=forwarded_message)
+
+
+def list_users(update, context):
+  # Send a list of active users and their chat IDs to the admin
+  user_list = "\n".join(
+      [f"{user}: {chat_id}" for user, chat_id in active_users.items()])
+  context.bot.send_message(chat_id=ADMIN_CHAT_ID,
+                           text=f"Active users:\n{user_list}")
+
+
+def admin_reply(update, context):
+  try:
+    parts = update.message.text.split(' ', 2)  # Split into three parts
+    user_chat_id = int(parts[1].strip())  # Convert the second part to integer
+    reply_message = parts[2].strip()  # The third part is the reply message
+
+    # Check if the message part is not empty
+    if reply_message:
+      # Send the reply to the specified user
+      context.bot.send_message(chat_id=user_chat_id, text=reply_message)
+    else:
+      update.message.reply_text(
+          "Message cannot be empty. Please provide a valid message.")
+  except (ValueError, IndexError) as e:
+    update.message.reply_text(
+        f"Error: {e}. Invalid format. Please use: '/reply user_chat_id: Your reply message'"
+    )
+
+  # Log the parsed parts for troubleshooting
+  logging.info(
+      f"Parsed parts: {parts}, User chat ID: {user_chat_id}, Reply message: {reply_message}"
+  )
+
+
+def main():
+  updater = Updater(TOKEN, use_context=True)
+  dp = updater.dispatcher
+
+  dp.add_handler(CommandHandler("start", start))
+  dp.add_handler(
+      MessageHandler(Filters.text & ~Filters.command, forward_message))
+  dp.add_handler(CommandHandler("listusers", list_users))
+  dp.add_handler(CommandHandler("reply", admin_reply))
+
+  updater.idle()
+
+
+if __name__ == '__main__':
+  main()
