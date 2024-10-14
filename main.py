@@ -12,7 +12,7 @@ from telegram.ext import (
 
 # Replace 'YOUR_API_TOKEN' with your actual Telegram API token
 TOKEN = "7229498909:AAGCOIzuldIxAnQyTT7czjPPPFQM1Z1-C88"
-QR_CODE_IMAGE_URL = "https://wertrends.s3.eu-north-1.amazonaws.com/Image.jpg"
+QR_CODE_IMAGE_URL = "https://wertrends.s3.eu-north-1.amazonaws.com/QR.jpg"
 ADMIN_CHAT_ID = "676637767"
 QUERY_LINK12 = "https://www.youtube.com/shorts/wC23vXpE2Hc"
 QUERY_LINK123 = "https://skrill.me/rq/PRAJAPATI/650/INR?key=YWpTSOor38Z78Pxepqmb0bESSVq"
